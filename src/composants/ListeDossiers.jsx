@@ -21,12 +21,12 @@ export default function ListeDossiers({utilisateur, etatDossiers}) {
   const [dossiers, setDossiers] = etatDossiers;
   const classes = useStyles();
 
+  // Trier les dossiers
   const triDossiers = (event) => {
     var champ = "";
     var ordre = "";
-    // console.log(event.target);
     const tri = event.target.value;
-    console.log(tri);
+    // console.log(tri);
     switch (tri) {
       case '1':
         champ = "datemodif"
@@ -45,7 +45,7 @@ export default function ListeDossiers({utilisateur, etatDossiers}) {
         ordre = "desc";
         break;
     }
-    console.log(champ, ordre);
+    // console.log(champ, ordre);
     crudDossiers.lireTout(utilisateur.uid, champ, ordre).then(
       dossiers => setDossiers(dossiers)
     );
