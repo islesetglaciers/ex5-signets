@@ -18,6 +18,8 @@ export async function creer(uid, dossier) {
 /**
  * Obtenir tous les dossiers de l'utilisateur connecté
  * @param {String} uid identifiant d'utilisateur Firebase
+ * @param {String} tri nom du champ par lequel les dossiers vont être triés
+ * @param {String} ordre ordre dans lequel les dossiers seront triés (asc ou desc)
  * @returns {Promise<any[]>} Promesse avec le tableau des documents de dossiers
  */
 export async function lireTout(uid, tri, ordre) {
@@ -54,5 +56,6 @@ export async function supprimer(uid, idd) {
  */
  export async function modifier(uid, did, dossier) {
   // Cadeau : à compléter pendant vos vacances d'été ;-)
+  // Wow merci !
   return true;
 }
