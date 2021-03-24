@@ -2,10 +2,54 @@ import './ListeDossiers.scss';
 import Dossier from './Dossier';
 import * as crudDossiers from '../services/crud-dossiers';
 import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import NativeSelect from '@material-ui/core/NativeSelect';
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    marginLeft: theme.spacing(16.5),
+    marginTop: theme.spacing(3),
+    minWidth: 300,
+  },
+}));
 
 export default function ListeDossiers({utilisateur, etatDossiers}) {
   // État des dossiers (vient du composant Appli)
   const [dossiers, setDossiers] = etatDossiers;
+  const classes = useStyles();
+
+  const triDossiers = (event) => {
+    var champ = "";
+    var ordre = "";
+    // console.log(event.target);
+    const tri = event.target.value;
+    console.log(tri);
+    switch (tri) {
+      case '1':
+        champ = "datemodif"
+        ordre = "desc"
+        break;
+      case '2':
+        champ = "nom";
+        ordre = "asc";
+        break;
+      case '3':
+        champ = "nom";
+        ordre = "desc";
+        break;
+      default:
+        champ = "datemodif";
+        ordre = "desc";
+        break;
+    }
+    console.log(champ, ordre);
+    crudDossiers.lireTout(utilisateur.uid, champ, ordre).then(
+      dossiers => setDossiers(dossiers)
+    );
+  };
 
   // Lire les dossiers dans Firestore et forcer le réaffichage du composant
   // Remarquez que ce code est dans un useEffect() car on veut l'exécuter 
@@ -15,7 +59,7 @@ export default function ListeDossiers({utilisateur, etatDossiers}) {
   // forcé par la mutation de l'état des dossiers
   useEffect(
     () => {
-      crudDossiers.lireTout(utilisateur.uid).then(
+      crudDossiers.lireTout(utilisateur.uid, "datemodif", "desc").then(
         dossiers => setDossiers(dossiers)
       )
     }, []
@@ -37,6 +81,18 @@ export default function ListeDossiers({utilisateur, etatDossiers}) {
   
   return (
     <>
+    <FormControl className={classes.formControl}>
+        <InputLabel shrink htmlFor="age-native-label-placeholder">
+          Tri des dossiers
+        </InputLabel>
+        <NativeSelect
+          onChange={triDossiers}
+        >
+          <option value={1}>Date de modification descendante</option>
+          <option value={2}>Nom de dossier ascendant</option>
+          <option value={3}>Nom de dossier descendant</option>
+        </NativeSelect>
+      </FormControl>
     <ul className="ListeDossiers">
       {
         (dossiers.length > 0) ?
